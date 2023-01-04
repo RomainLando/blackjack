@@ -2,6 +2,7 @@ from unittest import TestCase
 from unittest.mock import patch
 from src.hand import Hand
 from src.card import Card
+import io
 
 
 class TestHand(TestCase):
@@ -91,3 +92,31 @@ class TestHand(TestCase):
         with patch('builtins.input', return_value="1"):
             self.player_hand.calculate_value(self.card1)
             self.assertEqual(1, self.player_hand.get_value())
+
+    def test_display_method_one_card(self):
+        with patch('sys.stdout', new=io.StringIO()) as fake_stdout:
+            self.player_hand.add_card(self.card4)
+            self.player_hand.display()
+        self.assertEqual("9 of Clubs\nHand value: 9\n\n", fake_stdout.getvalue())
+
+    def test_display_method_two_card(self):
+        with patch('sys.stdout', new=io.StringIO()) as fake_stdout:
+            self.player_hand.add_card(self.card4)
+            self.player_hand.add_card(self.card2)
+            self.player_hand.display()
+        self.assertEqual("9 of Clubs\nK of Dimonds\nHand value: 19\n\n", fake_stdout.getvalue())
+
+    def test_dealer_initial_display_method_two_card(self):
+        with patch('sys.stdout', new=io.StringIO()) as fake_stdout:
+            self.dealer_hand.add_card(self.card4)
+            self.dealer_hand.add_card(self.card2)
+            self.dealer_hand.dealer_initial_display()
+        self.assertEqual("hidden\nK of Dimonds\n\n", fake_stdout.getvalue())
+
+    def test_dealer_initial_display_method_three_card_with_blackjack(self):
+        with patch('sys.stdout', new=io.StringIO()) as fake_stdout:
+            self.dealer_hand.add_card(self.card2)
+            self.dealer_hand.add_card(self.card5)
+            self.dealer_hand.add_card(self.card3)
+            self.dealer_hand.dealer_initial_display()
+        self.assertEqual("K of Dimonds\nQ of Clubs\nA of Hearts\nHand value: 21\n\n", fake_stdout.getvalue())
