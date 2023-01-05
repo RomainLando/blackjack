@@ -85,13 +85,15 @@ class TestHand(TestCase):
     
     def test_add_ace_to_player_hand_as_11(self):
         with patch('builtins.input', return_value="11"):
-            self.player_hand.calculate_value(self.card1)
-            self.assertEqual(11, self.player_hand.get_value())
+            with patch('sys.stdout', new=io.StringIO()):
+                self.player_hand.calculate_value(self.card1)
+                self.assertEqual(11, self.player_hand.get_value())
 
     def test_add_ace_to_player_hand_as_1(self):
         with patch('builtins.input', return_value="1"):
-            self.player_hand.calculate_value(self.card1)
-            self.assertEqual(1, self.player_hand.get_value())
+            with patch('sys.stdout', new=io.StringIO()):
+                self.player_hand.calculate_value(self.card1)
+                self.assertEqual(1, self.player_hand.get_value())
 
     def test_display_method_one_card(self):
         with patch('sys.stdout', new=io.StringIO()) as fake_stdout:
